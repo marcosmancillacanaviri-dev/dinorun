@@ -35,12 +35,10 @@ jobs:
 
       - name: Ordenar archivos del proyecto
         run: |
-          # Vuelca cualquier carpeta "subir*" que se haya subido a la raiz.
           for d in subir*/; do
             if [ -d "$d" ]; then cp -a "$d"/. . ; fi
           done
           rm -rf subir*/
-          # Frames sueltos en la raiz -> a su carpeta.
           mkdir -p img/jefes/dragon
           for n in 21 22 23 24; do
             if [ -f "walk_$n.png" ] && [ ! -f "img/jefes/dragon/walk_$n.png" ]; then
@@ -48,7 +46,7 @@ jobs:
             fi
           done
           ls -la
-          echo "img=$(find img -type f | wc -l)  music=$(find music -type f | wc -l)  p4a-recipes=$(find p4a-recipes -type f | wc -l)  dragon=$(ls img/jefes/dragon | wc -l)  golem=$(ls img/jefes/golem | wc -l)"
+          echo "img=$(find img -type f | wc -l) music=$(find music -type f | wc -l) p4a-recipes=$(find p4a-recipes -type f | wc -l) dragon=$(ls img/jefes/dragon | wc -l) golem=$(ls img/jefes/golem | wc -l)"
           for k in main.py buildozer.spec img/icono.png img/presplash.png music/fondo.mp3 music/boss.mp3 p4a-recipes/pygame-ce/__init__.py; do
             if [ ! -e "$k" ]; then echo "FALTA $k"; exit 1; fi
           done
