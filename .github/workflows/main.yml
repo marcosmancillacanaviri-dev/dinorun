@@ -1,0 +1,57 @@
+name: Build APK (pygame-ce)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache Android SDK / NDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer/android/platform/android-sdk
+            ~/.buildozer/android/platform/android-ndk-r28c
+          key: android-sdk-ndk-28c-api34-v1
+
+      - name: Compilar (ci.sh)
+        run: |
+          sed -i 's/\r$//' ci.sh
+          bash ci.sh
+
+      - name: Upload APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dino-runner-apk
+          path: |
+            bin/*.apk
+            .buildozer/android/platform/build-*/dists/*/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: buildozer-log
+          path: buildozer-build.log
+          if-no-files-found: ignore
