@@ -2,13 +2,18 @@
 Recipe de python-for-android para compilar pygame-ce (pygame Community Edition)
 para Android usando el bootstrap ``sdl2``.
 
-Basada en la receta del PR kivy/python-for-android#2971, con dos ajustes:
+Basada en la receta oficial ``pygame`` de python-for-android, con estos ajustes:
 
-* se fija la version a una que soporte el Python del p4a actual (3.14), que es
-  la misma que usa el juego en escritorio (pygame-ce 2.5.8);
+* se fija la version 2.5.8, la misma que usa el juego en escritorio;
 * las rutas de cabeceras de SDL2_image / SDL2_ttf / SDL2_mixer se pasan de
   forma defensiva (raiz y subcarpeta ``include``), porque la ubicacion exacta
-  de ``SDL_*.h`` cambia segun la version de cada libreria.
+  de ``SDL_*.h`` cambia segun la version de cada libreria;
+* se anade Cython a ``hostpython_prerequisites``: pygame-ce genera los ficheros
+  ``.c`` a partir de los ``.pyx`` durante la compilacion (su ``setup.py`` aborta
+  con "You need cython" si no lo encuentra) y la receta ``cython`` de p4a
+  todavia fija la version 0.29.36, que no soporta Python 3.14. La version 3.3.1
+  si lo soporta y ademas tiene wheel ``cp314`` ya compilado, asi que no hay que
+  compilar nada para el hostpython.
 """
 
 from os.path import join
@@ -35,6 +40,10 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
     depends = ['sdl2', 'sdl2_image', 'sdl2_mixer', 'sdl2_ttf', 'setuptools', 'jpeg', 'png']
     call_hostpython_via_targetpython = False  # debido a setuptools
     install_in_hostpython = False
+
+    # Paquetes que p4a instala en el hostpython antes de compilar. Cython es
+    # imprescindible para pygame-ce (genera los .c desde los .pyx).
+    hostpython_prerequisites = ['setuptools', 'Cython==3.3.1']
 
     def _includes(self, jni_name):
         """Cabeceras de una libreria SDL2 del bootstrap (raiz + ``include``)."""
