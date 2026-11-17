@@ -18,10 +18,17 @@ necesarios para pygame-ce 2.5.8 (verificados contra su codigo fuente):
 4. Se borra la variable ``CI`` del entorno: si esta definida (GitHub Actions
    siempre la define) el ``setup.py`` de pygame-ce anade ``-Werror`` y cualquier
    aviso de clang del NDK rompe la compilacion.
-5. Se cambia el backend de ``pyproject.toml`` a setuptools: p4a instala el
-   paquete con ``pip install .`` y el backend que trae pygame-ce (meson-python)
-   intenta ejecutar en el PC un binario compilado para ARM, lo que falla con
-   "Could not invoke sanity check executable".
+5. ``pyproject.toml``: p4a instala el paquete al final con ``pip install .``, y
+   pip usa el backend que declare ese fichero. El que trae pygame-ce
+   (``meson-python``) compila un binario para ARM e intenta ejecutarlo en el PC
+   -> falla con "Could not invoke sanity check executable". El backend moderno
+   de setuptools tambien falla, porque ejecuta ``setup.py`` sin poner la carpeta
+   del proyecto en ``sys.path`` y su ``import buildconfig`` revienta. Se deja el
+   backend **legacy** de setuptools (``setuptools.build_meta:__legacy__``), que
+   es exactamente el que pip usa cuando el paquete no trae ``pyproject.toml``
+   (o sea, el mismo camino que usa la receta oficial de pygame 2.1.0).
+6. Como segundo cinturon, el propio ``setup.py`` se parchea para que anada la
+   carpeta del proyecto a ``sys.path`` antes de ``import buildconfig``.
 """
 
 import os
@@ -31,13 +38,16 @@ from pythonforandroid.logger import warning
 from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 from pythonforandroid.toolchain import current_directory
 
-# Backend con el que se sustituye el de pygame-ce en pyproject.toml. Cython se
-# declara aqui para que pip lo tenga disponible tambien en el entorno aislado
-# que crea al instalar el paquete.
-BACKEND_SETUPTOOLS = [
+# Backend con el que se sustituye el de pygame-ce en pyproject.toml. Se declara
+# Cython en ``requires`` para que pip lo tenga tambien en el entorno aislado que
+# crea al instalar el paquete.
+BACKEND_LEGACY = [
     'requires = ["setuptools", "wheel", "Cython==3.2.9"]',
-    'build-backend = "setuptools.build_meta"',
+    'build-backend = "setuptools.build_meta:__legacy__"',
 ]
+
+# Marca que se inserta en setup.py para no parchearlo dos veces.
+MARCA_SETUP_PY = '# --- p4a: carpeta del proyecto en sys.path ---'
 
 
 class PygameCERecipe(CompiledComponentsPythonRecipe):
@@ -107,7 +117,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
         return ' '.join('-I{}'.format(directory) for directory in unique) + ' '
 
     def _parchear_pyproject(self):
-        """Sustituye el backend meson-python de pygame-ce por setuptools.
+        """Sustituye el backend de pygame-ce por el legacy de setuptools.
 
         El resto del fichero (la tabla ``[project]``, de la que ``setup.py``
         toma parte de los metadatos) se deja intacto.
@@ -124,7 +134,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
                 en_tabla = True
                 cambiado = True
                 nuevas.append('[build-system]')
-                nuevas.extend(BACKEND_SETUPTOOLS)
+                nuevas.extend(BACKEND_LEGACY)
                 continue
             if en_tabla:
                 if linea.startswith('['):
@@ -134,9 +144,42 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
             nuevas.append(linea)
         if not cambiado:
             nuevas.extend(['', '[build-system]'])
-            nuevas.extend(BACKEND_SETUPTOOLS)
+            nuevas.extend(BACKEND_LEGACY)
         with open('pyproject.toml', 'w', encoding='utf-8') as fh:
             fh.write('\n'.join(nuevas) + '\n')
+
+    def _parchear_setup_py(self):
+        """Hace que ``setup.py`` pueda importar ``buildconfig``.
+
+        ``setup.py`` empieza con ``import buildconfig.get_version`` (linea 12).
+        Con ``python setup.py`` funciona porque Python anade la carpeta del
+        script a ``sys.path``, pero al instalar pip ejecuta ``setup.py`` dentro
+        de su propio proceso y esa carpeta no esta en ``sys.path``, asi que
+        falla con ``ModuleNotFoundError: No module named 'buildconfig'``. Aqui
+        se anade la carpeta del proyecto a ``sys.path`` justo antes del import.
+        """
+        if not os.path.exists('setup.py'):
+            return
+        with open('setup.py', encoding='utf-8') as fh:
+            contenido = fh.read()
+        if MARCA_SETUP_PY in contenido:
+            return
+        lineas = contenido.splitlines()
+        for indice, linea in enumerate(lineas):
+            if linea.strip() == 'import buildconfig.get_version as pg_ver':
+                lineas[indice:indice] = [
+                    MARCA_SETUP_PY,
+                    'import os as _p4a_os, sys as _p4a_sys',
+                    '_p4a_raiz = _p4a_os.path.dirname(_p4a_os.path.abspath('
+                    'globals().get("__file__") or "setup.py"))',
+                    '_p4a_sys.path.insert(0, _p4a_raiz or _p4a_os.getcwd())',
+                ]
+                break
+        else:
+            warning('No se encontro el import de buildconfig en setup.py')
+            return
+        with open('setup.py', 'w', encoding='utf-8') as fh:
+            fh.write('\n'.join(lineas) + '\n')
 
     def prebuild_arch(self, arch):
         super().prebuild_arch(arch)
@@ -167,6 +210,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
             )
             open('Setup', 'w').write(setup_file)
             self._parchear_pyproject()
+            self._parchear_setup_py()
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)
