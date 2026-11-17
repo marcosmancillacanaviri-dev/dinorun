@@ -1,3 +1,4 @@
+[1m[90m[DEBUG][39m[0m:   	rm -f /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/obj/local/arm64-v8a/objs-debug/freetype/./src/cff/cff.o
 [1m[90m[DEBUG][39m[0m:   	/usr/bin/ccache /home/runner/.buildozer/android/platform/android-ndk-r28c/toolchains/llvm/prebuilt/linux-x86_64/bin/clang -MMD -MP -MF /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/obj/local/arm64-v8a/objs-debug/freetype/./src/cff/cff.o.d -target aarch64-none-linux-android24 -fdata-sections -ffunction-sections -fstack-protector-strong -funwind-tables -no-canonical-prefixes  --sysroot /home/runner/.buildozer/android/platform/android-ndk-r28c/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -Wno-invalid-command-line-argument -Wno-unused-command-line-argument  -D_FORTIFY_SOURCE=2 -fpic -O0 -UNDEBUG -fno-limit-debug-info  -I/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/jni/SDL2_ttf/external/freetype/include -I/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/jni/SDL2_ttf/external/freetype/../harfbuzz/src/ -I/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/jni/SDL2_ttf/external/freetype   -DANDROID -DFT_CONFIG_OPTION_USE_HARFBUZZ -DFT2_BUILD_LIBRARY -Os -DFT_PUBLIC_FUNCTION_ATTRIBUTE= -Wformat -Werror=format-security  -c  /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/jni/SDL2_ttf/external/freetype/./src/cff/cff.c -o /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/obj/local/arm64-v8a/objs-debug/freetype/./src/cff/cff.o
 [1m[90m[DEBUG][39m[0m:   	[arm64-v8a] Compile        : freetype <= type1cid.c
 [1m[90m[DEBUG][39m[0m:   	rm -f /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/bootstrap_builds/sdl2/obj/local/arm64-v8a/objs-debug/freetype/./src/cid/type1cid.o
@@ -77,13 +78,13 @@ stty: standard input: Inappropriate ioctl for device
 [1m[90m[DEBUG][39m[0m:   	Collecting setuptools
 [1m[90m[DEBUG][39m[0m:   	  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
 [1m[90m[DEBUG][39m[0m:   	Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
-[1m[90m[DEBUG][39m[0m:   	[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/876.3 kB[0m [31m?[0m eta [36m-:--:--[0m[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m876.3/876.3 kB[0m [31m36.0 MB/s[0m  [33m0:00:00[0m
+[1m[90m[DEBUG][39m[0m:   	[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/876.3 kB[0m [31m?[0m eta [36m-:--:--[0m[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m876.3/876.3 kB[0m [31m41.1 MB/s[0m  [33m0:00:00[0m
 [1m[90m[DEBUG][39m[0m:   	[?25hInstalling collected packages: setuptools
 [1m[90m[DEBUG][39m[0m:   	Successfully installed setuptools-84.2.1
 [1m[INFO][0m:    [1m[32mBuilding pygame-ce for arm64-v8a[0m[39m
 [1m[INFO][0m:    pygame-ce apparently isn't already in site-packages
 stty: standard input: Inappropriate ioctl for device
-[1m[90m[DEBUG][39m[0m:   [90m->[0m running pip3 install setuptools Cython==3.3.1 -q --upgrade[0m
+[1m[90m[DEBUG][39m[0m:   [90m->[0m running pip3 install setuptools Cython==3.2.9 -q --upgrade[0m
 [1m[90m[DEBUG][39m[0m:   	
 [1m[90m[DEBUG][39m[0m:   	[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m25.3[0m[39;49m -> [0m[32;49m26.3[0m
 [1m[90m[DEBUG][39m[0m:   	[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49m/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/hostpython3/desktop/hostpython3/native-build/root/usr/local/bin/python -m pip install --upgrade pip[0m
@@ -92,25 +93,25 @@ stty: standard input: Inappropriate ioctl for device
 stty: standard input: Inappropriate ioctl for device
 [1m[90m[DEBUG][39m[0m:   [90m->[0m running python setup.py build_ext -v[0m
 [1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/pypm.pyx because the generated C file is missing.
+[1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/controller_old.pyx because the generated C file is missing.
 [1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/mixer.pyx because the generated C file is missing.
 [1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/video.pyx because the generated C file is missing.
-[1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/audio.pyx because the generated C file is missing.
 [1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/sdl2.pyx because the generated C file is missing.
-[1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/controller_old.pyx because the generated C file is missing.
+[1m[90m[DEBUG][39m[0m:   	Compiling src_c/cython/pygame/_sdl2/audio.pyx because the generated C file is missing.
 [1m[90m[DEBUG][39m[0m:   	[1/6] Cythonizing src_c/cython/pygame/pypm.pyx
-[1m[90m[DEBUG][39m[0m:   	[2/6] Cythonizing src_c/cython/pygame/_sdl2/mixer.pyx
+[1m[90m[DEBUG][39m[0m:   	[2/6] Cythonizing src_c/cython/pygame/_sdl2/controller_old.pyx
+[1m[90m[DEBUG][39m[0m:   	[3/6] Cythonizing src_c/cython/pygame/_sdl2/mixer.pyx
 [1m[90m[DEBUG][39m[0m:   	performance hint: src_c/cython/pygame/_sdl2/mixer.pyx:17:0: Exception check on 'recording_cb' will always require the GIL to be acquired.
 [1m[90m[DEBUG][39m[0m:   	Possible solutions:
 [1m[90m[DEBUG][39m[0m:   		1. Declare 'recording_cb' as 'noexcept' if you control the definition and you're sure you don't want the function to raise exceptions.
 [1m[90m[DEBUG][39m[0m:   		2. Use an 'int' return type on 'recording_cb' to allow an error code to be returned.
-[1m[90m[DEBUG][39m[0m:   	[3/6] Cythonizing src_c/cython/pygame/_sdl2/video.pyx
-[1m[90m[DEBUG][39m[0m:   	[4/6] Cythonizing src_c/cython/pygame/_sdl2/audio.pyx
+[1m[90m[DEBUG][39m[0m:   	[4/6] Cythonizing src_c/cython/pygame/_sdl2/video.pyx
+[1m[90m[DEBUG][39m[0m:   	[5/6] Cythonizing src_c/cython/pygame/_sdl2/sdl2.pyx
+[1m[90m[DEBUG][39m[0m:   	[6/6] Cythonizing src_c/cython/pygame/_sdl2/audio.pyx
 [1m[90m[DEBUG][39m[0m:   	performance hint: src_c/cython/pygame/_sdl2/audio.pyx:71:0: Exception check on 'recording_cb' will always require the GIL to be acquired.
 [1m[90m[DEBUG][39m[0m:   	Possible solutions:
 [1m[90m[DEBUG][39m[0m:   		1. Declare 'recording_cb' as 'noexcept' if you control the definition and you're sure you don't want the function to raise exceptions.
 [1m[90m[DEBUG][39m[0m:   		2. Use an 'int' return type on 'recording_cb' to allow an error code to be returned.
-[1m[90m[DEBUG][39m[0m:   	[5/6] Cythonizing src_c/cython/pygame/_sdl2/sdl2.pyx
-[1m[90m[DEBUG][39m[0m:   	[6/6] Cythonizing src_c/cython/pygame/_sdl2/controller_old.pyx
 [1m[90m[DEBUG][39m[0m:   	/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/hostpython3/desktop/hostpython3/native-build/root/usr/local/lib/python3.14/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
 [1m[90m[DEBUG][39m[0m:   	!!
 [1m[90m[DEBUG][39m[0m:   	
@@ -193,20 +194,20 @@ stty: standard input: Inappropriate ioctl for device
 [1m[90m[DEBUG][39m[0m:   	  [31m×[0m [32mPreparing metadata [0m[1;32m([0m[32mpyproject.toml[0m[1;32m)[0m did not run successfully.
 [1m[90m[DEBUG][39m[0m:   	  [31m│[0m exit code: [1;36m1[0m
 [1m[90m[DEBUG][39m[0m:   	  [31m╰─>[0m [31m[14 lines of output][0m
-[1m[90m[DEBUG][39m[0m:   	  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-python-native-file.ini
+[1m[90m[DEBUG][39m[0m:   	  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-python-native-file.ini
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m The Meson build system
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Version: 1.11.2
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Source dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce
-[1m[90m[DEBUG][39m[0m:   	  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp
+[1m[90m[DEBUG][39m[0m:   	  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Build type: native build
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Program python found: YES
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Project name: pygame_ce
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Project version: 2.5.8
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m
-[1m[90m[DEBUG][39m[0m:   	  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
+[1m[90m[DEBUG][39m[0m:   	  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m Possibly wrong architecture or the executable bit is not set..
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m
-[1m[90m[DEBUG][39m[0m:   	  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-logs/meson-log.txt
+[1m[90m[DEBUG][39m[0m:   	  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-logs/meson-log.txt
 [1m[90m[DEBUG][39m[0m:   	  [31m   [0m [31m[end of output][0m
 [1m[90m[DEBUG][39m[0m:   	
 [1m[90m[DEBUG][39m[0m:   	  [1;35mnote[0m: This error originates from a subprocess, and is likely not a problem with pip.
@@ -221,7 +222,7 @@ stty: standard input: Inappropriate ioctl for device
 [1m[90m[DEBUG][39m[0m:   	[1;35mnote[0m: This is an issue with the package mentioned above, not pip.
 [1m[90m[DEBUG][39m[0m:   	[1;36mhint[0m: See above for details.
 [1m[90m[DEBUG][39m[0m:   	[?25h
-Exception in thread background thread for pid 61089:
+Exception in thread background thread for pid 61307:
 Traceback (most recent call last):
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
     self.run()
@@ -250,20 +251,20 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
   [31m×[0m [32mPreparing metadata [0m[1;32m([0m[32mpyproject.toml[0m[1;32m)[0m did not run successfully.
   [31m│[0m exit code: [1;36m1[0m
   [31m╰─>[0m [31m[14 lines of output][0m
-  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-python-native-file.ini
+  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-python-native-file.ini
   [31m   [0m The Meson build system
   [31m   [0m Version: 1.11.2
   [31m   [0m Source dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce
-  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp
+  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd
   [31m   [0m Build type: native build
   [31m   [0m Program python found: YES
   [31m   [0m Project name: pygame_ce
   [31m   [0m Project version: 2.5.8
   [31m   [0m 
-  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
+  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
   [31m   [0m Possibly wrong architecture or the executable bit is not set..
   [31m   [0m 
-  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-logs/meson-log.txt
+  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-logs/meson-log.txt
   [31m   [0m [31m[end of output][0m
   
   [1;35mnote[0m: This error originates from a subprocess, and is likely not a problem with pip.
@@ -322,20 +323,20 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
   [31m×[0m [32mPreparing metadata [0m[1;32m([0m[32mpyproject.toml[0m[1;32m)[0m did not run successfully.
   [31m│[0m exit code: [1;36m1[0m
   [31m╰─>[0m [31m[14 lines of output][0m
-  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-python-native-file.ini
+  [31m   [0m + meson setup /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-python-native-file.ini
   [31m   [0m The Meson build system
   [31m   [0m Version: 1.11.2
   [31m   [0m Source dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce
-  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp
+  [31m   [0m Build dir: /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd
   [31m   [0m Build type: native build
   [31m   [0m Program python found: YES
   [31m   [0m Project name: pygame_ce
   [31m   [0m Project version: 2.5.8
   [31m   [0m 
-  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
+  [31m   [0m ../meson.build:1:0: ERROR: Could not invoke sanity check executable: Failed running '/home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-private/sanity_check_for_c.exe', binary or interpreter not executable.
   [31m   [0m Possibly wrong architecture or the executable bit is not set..
   [31m   [0m 
-  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-af7hvlbp/meson-logs/meson-log.txt
+  [31m   [0m A full log can be found at /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-arm64-v8a/build/other_builds/pygame-ce/arm64-v8a__ndk_target_24/pygame-ce/.mesonpy-s865gxpd/meson-logs/meson-log.txt
   [31m   [0m [31m[end of output][0m
   
   [1;35mnote[0m: This error originates from a subprocess, and is likely not a problem with pip.
@@ -375,11 +376,11 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     JAVA_HOME_11_X64 = '/usr/lib/jvm/temurin-11-jdk-amd64'[0m
 [0m[1;31m#     JAVA_HOME_25_X64 = '/usr/lib/jvm/temurin-25-jdk-amd64'[0m
 [0m[1;31m#     PKG_CONFIG_PATH = '/opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig'[0m
-[0m[1;31m#     GITHUB_PATH = '/home/runner/work/_temp/_runner_file_commands/add_path_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_PATH = '/home/runner/work/_temp/_runner_file_commands/add_path_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     GITHUB_ACTION = '__run_5'[0m
 [0m[1;31m#     JAVA_HOME = '/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64'[0m
-[0m[1;31m#     GITHUB_RUN_NUMBER = '6'[0m
-[0m[1;31m#     RUNNER_NAME = 'GitHub Actions 1000000014'[0m
+[0m[1;31m#     GITHUB_RUN_NUMBER = '7'[0m
+[0m[1;31m#     RUNNER_NAME = 'GitHub Actions 1000000015'[0m
 [0m[1;31m#     GRADLE_HOME = '/usr/share/gradle-9.9.1'[0m
 [0m[1;31m#     GITHUB_REPOSITORY_OWNER_ID = '244581360'[0m
 [0m[1;31m#     ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE = '/opt/actionarchivecache'[0m
@@ -399,13 +400,13 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     PWD = '/home/runner/work/dinorun/dinorun'[0m
 [0m[1;31m#     PIPX_BIN_DIR = '/opt/pipx_bin'[0m
 [0m[1;31m#     LOGNAME = 'runner'[0m
-[0m[1;31m#     GITHUB_ARTIFACTS_LIST = '/home/runner/work/_temp/_runner_file_commands/artifacts_list_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_ARTIFACTS_LIST = '/home/runner/work/_temp/_runner_file_commands/artifacts_list_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     GITHUB_REPOSITORY_ID = '1460916311'[0m
 [0m[1;31m#     GITHUB_ACTIONS = 'true'[0m
 [0m[1;31m#     USE_BAZEL_FALLBACK_VERSION = 'silent:'[0m
 [0m[1;31m#     ANDROID_NDK_LATEST_HOME = '/usr/local/lib/android/sdk/ndk/30.0.16248370'[0m
-[0m[1;31m#     SYSTEMD_EXEC_PID = '1966'[0m
-[0m[1;31m#     GITHUB_SHA = '197b95528dba8699374f0dabd3fc373607799497'[0m
+[0m[1;31m#     SYSTEMD_EXEC_PID = '1941'[0m
+[0m[1;31m#     GITHUB_SHA = '60d5cd4129687a6a663b60df232cdc9419d08843'[0m
 [0m[1;31m#     ANDROIDNDK = '/home/runner/.buildozer/android/platform/android-ndk-r28c'[0m
 [0m[1;31m#     GITHUB_WORKFLOW_REF = 'marcosmancillacanaviri-dev/dinorun/.github/workflows/main.yml@refs/heads/main'[0m
 [0m[1;31m#     POWERSHELL_DISTRIBUTION_CHANNEL = 'GitHub-Actions-Linux'[0m
@@ -418,25 +419,24 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     GITHUB_API_URL = 'https://api.github.com'[0m
 [0m[1;31m#     LANG = 'C.UTF-8'[0m
 [0m[1;31m#     GOROOT_1_25_X64 = '/opt/hostedtoolcache/go/1.25.14/x64'[0m
-[0m[1;31m#     RUNNER_TRACKING_ID = 'github_fdf1badb-c757-4b86-826c-6715bc31b288'[0m
+[0m[1;31m#     RUNNER_TRACKING_ID = 'github_d40c2744-a8ba-44c4-b8da-62ccda25a42e'[0m
 [0m[1;31m#     RUNNER_ARCH = 'X64'[0m
 [0m[1;31m#     MEMORY_PRESSURE_WATCH = '/sys/fs/cgroup/system.slice/hosted-compute-agent.service/memory.pressure'[0m
 [0m[1;31m#     RUNNER_TEMP = '/home/runner/work/_temp'[0m
-[0m[1;31m#     GITHUB_STATE = '/home/runner/work/_temp/_runner_file_commands/save_state_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_STATE = '/home/runner/work/_temp/_runner_file_commands/save_state_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     EDGEWEBDRIVER = '/usr/local/share/edge_driver'[0m
 [0m[1;31m#     JAVA_HOME_21_X64 = '/usr/lib/jvm/temurin-21-jdk-amd64'[0m
-[0m[1;31m#     GITHUB_ENV = '/home/runner/work/_temp/_runner_file_commands/set_env_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_ENV = '/home/runner/work/_temp/_runner_file_commands/set_env_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     GITHUB_EVENT_PATH = '/home/runner/work/_temp/_github_workflow/event.json'[0m
-[0m[1;31m#     INVOCATION_ID = '6ec150898fff4a77b93e69f8ee59f04e'[0m
+[0m[1;31m#     INVOCATION_ID = 'a3a79134d1b74473a9b9f5e3ef93bf2d'[0m
 [0m[1;31m#     GITHUB_EVENT_NAME = 'push'[0m
-[0m[1;31m#     GITHUB_RUN_ID = '44037802619'[0m
+[0m[1;31m#     GITHUB_RUN_ID = '44039719781'[0m
 [0m[1;31m#     JAVA_HOME_17_X64 = '/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64'[0m
 [0m[1;31m#     ANDROID_NDK_HOME = '/usr/local/lib/android/sdk/ndk/27.3.13750724'[0m
-[0m[1;31m#     GITHUB_STEP_SUMMARY = '/home/runner/work/_temp/_runner_file_commands/step_summary_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_STEP_SUMMARY = '/home/runner/work/_temp/_runner_file_commands/step_summary_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     HOMEBREW_NO_AUTO_UPDATE = '1'[0m
 [0m[1;31m#     GITHUB_ACTOR = 'marcosmancillacanaviri-dev'[0m
 [0m[1;31m#     NVM_DIR = '/home/runner/.nvm'[0m
-[0m[1;31m#     SGX_AESM_ADDR = '1'[0m
 [0m[1;31m#     GITHUB_RUN_ATTEMPT = '1'[0m
 [0m[1;31m#     ANDROID_HOME = '/usr/local/lib/android/sdk'[0m
 [0m[1;31m#     GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'[0m
@@ -452,13 +452,13 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     ANDROID_SDK_ROOT = '/usr/local/lib/android/sdk'[0m
 [0m[1;31m#     VCPKG_INSTALLATION_ROOT = '/usr/local/share/vcpkg'[0m
 [0m[1;31m#     GITHUB_ACTOR_ID = '244581360'[0m
-[0m[1;31m#     ACTIONS_ORCHESTRATION_ID = '7fee97a6-686b-892b-a8f1-822add72e462.build.__default'[0m
+[0m[1;31m#     ACTIONS_ORCHESTRATION_ID = 'af858629-3928-8223-b5eb-f88490d3f6b2.build.__default'[0m
 [0m[1;31m#     RUNNER_TOOL_CACHE = '/opt/hostedtoolcache'[0m
-[0m[1;31m#     ImageVersion = '20261111.196.1'[0m
+[0m[1;31m#     ImageVersion = '20261111.82.6'[0m
 [0m[1;31m#     Python3_ROOT_DIR = '/opt/hostedtoolcache/Python/3.11.18/x64'[0m
 [0m[1;31m#     DOTNET_NOLOGO = '1'[0m
-[0m[1;31m#     GITHUB_ARTIFACTS = '/home/runner/work/_temp/_runner_file_commands/artifacts_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
-[0m[1;31m#     GITHUB_WORKFLOW_SHA = '197b95528dba8699374f0dabd3fc373607799497'[0m
+[0m[1;31m#     GITHUB_ARTIFACTS = '/home/runner/work/_temp/_runner_file_commands/artifacts_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
+[0m[1;31m#     GITHUB_WORKFLOW_SHA = '60d5cd4129687a6a663b60df232cdc9419d08843'[0m
 [0m[1;31m#     GOROOT_1_24_X64 = '/opt/hostedtoolcache/go/1.24.13/x64'[0m
 [0m[1;31m#     GITHUB_REF_NAME = 'main'[0m
 [0m[1;31m#     GITHUB_JOB = 'build'[0m
@@ -472,10 +472,10 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     CHROME_BIN = '/usr/bin/google-chrome'[0m
 [0m[1;31m#     ANDROIDSDK = '/home/runner/.buildozer/android/platform/android-sdk'[0m
 [0m[1;31m#     GITHUB_RETENTION_DAYS = '90'[0m
-[0m[1;31m#     JOURNAL_STREAM = '10:12937'[0m
+[0m[1;31m#     JOURNAL_STREAM = '10:16860'[0m
 [0m[1;31m#     RUNNER_WORKSPACE = '/home/runner/work/dinorun'[0m
 [0m[1;31m#     GITHUB_ACTION_REPOSITORY = ''[0m
-[0m[1;31m#     HCA_CLOUD_PROVIDER = 'azure'[0m
+[0m[1;31m#     HCA_CLOUD_PROVIDER = 'aws'[0m
 [0m[1;31m#     PATH = '/home/runner/.buildozer/android/platform/apache-ant-1.9.4/bin:/opt/hostedtoolcache/Python/3.11.18/x64/bin:/opt/hostedtoolcache/Python/3.11.18/x64:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64/bin:/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'[0m
 [0m[1;31m#     GITHUB_BASE_REF = ''[0m
 [0m[1;31m#     GHCUP_INSTALL_BASE_PREFIX = '/usr/local'[0m
@@ -488,7 +488,7 @@ Processing /home/runner/work/dinorun/dinorun/.buildozer/android/platform/build-a
 [0m[1;31m#     ENABLE_RUNNER_TRACING = 'true'[0m
 [0m[1;31m#     GITHUB_WORKFLOW = 'Build APK (pygame-ce)'[0m
 [0m[1;31m#     DEBIAN_FRONTEND = 'noninteractive'[0m
-[0m[1;31m#     GITHUB_OUTPUT = '/home/runner/work/_temp/_runner_file_commands/set_output_0a8a0f8e-296d-4d30-ad51-835ae2542b4f'[0m
+[0m[1;31m#     GITHUB_OUTPUT = '/home/runner/work/_temp/_runner_file_commands/set_output_26c929ae-94dd-4a14-8405-2a0fe1b12718'[0m
 [0m[1;31m#     AGENT_TOOLSDIRECTORY = '/opt/hostedtoolcache'[0m
 [0m[1;31m#     _ = '/opt/hostedtoolcache/Python/3.11.18/x64/bin/buildozer'[0m
 [0m[1;31m#     PACKAGES_PATH = '/home/runner/.buildozer/android/packages'[0m
