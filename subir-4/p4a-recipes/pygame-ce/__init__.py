@@ -2,30 +2,42 @@
 Recipe de python-for-android para compilar pygame-ce (pygame Community Edition)
 para Android usando el bootstrap ``sdl2``.
 
-Basada en la receta oficial ``pygame`` de python-for-android, con estos ajustes,
-todos verificados contra el codigo real de pygame-ce 2.5.8:
+Basada en la receta oficial ``pygame`` de python-for-android, con los ajustes
+necesarios para pygame-ce 2.5.8 (verificados contra su codigo fuente):
 
-* se fija la version 2.5.8, la misma que usa el juego en escritorio;
-* las cabeceras de SDL2_ttf / SDL2_image / SDL2_mixer se recogen de forma
-  defensiva: se prueban las del bootstrap y las que declara cada receta
-  (``get_include_dirs``). Un ``-I`` de mas nunca molesta;
-* se instala Cython en el hostpython con el gancho oficial
-  ``hostpython_prerequisites``: pygame-ce genera los ``.c`` de ``_sdl2`` a
-  partir de los ``.pyx`` durante la compilacion y su ``setup.py`` aborta con
-  "You need cython" si no lo encuentra. Se usa la 3.2.9 porque es la ultima que
-  admite el propio pygame-ce 2.5.8 (``cython<=3.2.9``) y porque tiene wheel
-  ``cp314`` (Python 3.14, el que usa p4a), asi que se instala sin compilar.
-  La receta ``cython`` de p4a no sirve: todavia fija la 0.29.36;
-* se borra la variable ``CI`` del entorno: si esta definida (GitHub Actions
-  siempre la define), el ``setup.py`` de pygame-ce anade ``-Werror`` a todos los
-  modulos y cualquier aviso de clang (NDK) rompe la compilacion.
+1. Version 2.5.8, la misma que usa el juego en escritorio.
+2. Cabeceras de SDL2_ttf / SDL2_image / SDL2_mixer: se prueban las del bootstrap
+   y las que declara cada receta (``get_include_dirs``). Un ``-I`` de mas no
+   molesta nunca.
+3. Cython en el hostpython (gancho oficial ``hostpython_prerequisites``):
+   pygame-ce genera los ``.c`` de ``_sdl2`` desde los ``.pyx`` y su ``setup.py``
+   aborta con "You need cython" si falta. Se usa la 3.2.9 porque es la ultima
+   que admite el propio pygame-ce (``cython<=3.2.9``) y tiene wheel ``cp314``
+   (Python 3.14), asi que se instala sin compilar. La receta ``cython`` de p4a
+   no sirve: todavia fija la 0.29.36.
+4. Se borra la variable ``CI`` del entorno: si esta definida (GitHub Actions
+   siempre la define) el ``setup.py`` de pygame-ce anade ``-Werror`` y cualquier
+   aviso de clang del NDK rompe la compilacion.
+5. Se cambia el backend de ``pyproject.toml`` a setuptools: p4a instala el
+   paquete con ``pip install .`` y el backend que trae pygame-ce (meson-python)
+   intenta ejecutar en el PC un binario compilado para ARM, lo que falla con
+   "Could not invoke sanity check executable".
 """
 
+import os
 from os.path import join
 
 from pythonforandroid.logger import warning
 from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 from pythonforandroid.toolchain import current_directory
+
+# Backend con el que se sustituye el de pygame-ce en pyproject.toml. Cython se
+# declara aqui para que pip lo tenga disponible tambien en el entorno aislado
+# que crea al instalar el paquete.
+BACKEND_SETUPTOOLS = [
+    'requires = ["setuptools", "wheel", "Cython==3.2.9"]',
+    'build-backend = "setuptools.build_meta"',
+]
 
 
 class PygameCERecipe(CompiledComponentsPythonRecipe):
@@ -40,15 +52,15 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
     version = '2.5.8'
     url = 'https://github.com/pygame-community/pygame-ce/archive/{version}.tar.gz'
 
-    site_packages_name = 'pygame-ce'
+    # El modulo instalado se llama ``pygame``, no ``pygame-ce``.
+    site_packages_name = 'pygame'
     name = 'pygame-ce'
 
     depends = ['sdl2', 'sdl2_image', 'sdl2_mixer', 'sdl2_ttf', 'setuptools', 'jpeg', 'png']
     call_hostpython_via_targetpython = False  # debido a setuptools
     install_in_hostpython = False
 
-    # Paquetes que p4a instala en el hostpython antes de compilar. Cython es
-    # imprescindible para pygame-ce (genera los .c de _sdl2 desde los .pyx).
+    # Paquetes que p4a instala en el hostpython antes de compilar.
     hostpython_prerequisites = ['setuptools', 'Cython==3.2.9']
 
     # Variantes que se prueban si la anterior no estuviera disponible.
@@ -94,6 +106,38 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
                 unique.append(directory)
         return ' '.join('-I{}'.format(directory) for directory in unique) + ' '
 
+    def _parchear_pyproject(self):
+        """Sustituye el backend meson-python de pygame-ce por setuptools.
+
+        El resto del fichero (la tabla ``[project]``, de la que ``setup.py``
+        toma parte de los metadatos) se deja intacto.
+        """
+        if not os.path.exists('pyproject.toml'):
+            return
+        with open('pyproject.toml', encoding='utf-8') as fh:
+            lineas = fh.read().splitlines()
+        nuevas = []
+        en_tabla = False
+        cambiado = False
+        for linea in lineas:
+            if linea.strip() == '[build-system]':
+                en_tabla = True
+                cambiado = True
+                nuevas.append('[build-system]')
+                nuevas.extend(BACKEND_SETUPTOOLS)
+                continue
+            if en_tabla:
+                if linea.startswith('['):
+                    en_tabla = False
+                else:
+                    continue
+            nuevas.append(linea)
+        if not cambiado:
+            nuevas.extend(['', '[build-system]'])
+            nuevas.extend(BACKEND_SETUPTOOLS)
+        with open('pyproject.toml', 'w', encoding='utf-8') as fh:
+            fh.write('\n'.join(nuevas) + '\n')
+
     def prebuild_arch(self, arch):
         super().prebuild_arch(arch)
         with current_directory(self.get_build_dir(arch.arch)):
@@ -122,6 +166,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
                 freetype_includes='',
             )
             open('Setup', 'w').write(setup_file)
+            self._parchear_pyproject()
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)
