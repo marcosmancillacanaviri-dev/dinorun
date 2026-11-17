@@ -33,10 +33,70 @@ jobs:
             ~/.buildozer/android/platform/android-ndk-r28c
           key: android-sdk-ndk-28c-api34-v1
 
-      - name: Compilar (ci.sh)
+      - name: Ordenar archivos del proyecto
         run: |
-          sed -i 's/\r$//' ci.sh
-          bash ci.sh
+          # Vuelca cualquier carpeta "subir*" que se haya subido a la raiz.
+          for d in subir*/; do
+            if [ -d "$d" ]; then cp -a "$d"/. . ; fi
+          done
+          rm -rf subir*/
+          # Frames sueltos en la raiz -> a su carpeta.
+          mkdir -p img/jefes/dragon
+          for n in 21 22 23 24; do
+            if [ -f "walk_$n.png" ] && [ ! -f "img/jefes/dragon/walk_$n.png" ]; then
+              mv -f "walk_$n.png" img/jefes/dragon/
+            fi
+          done
+          ls -la
+          echo "img=$(find img -type f | wc -l)  music=$(find music -type f | wc -l)  p4a-recipes=$(find p4a-recipes -type f | wc -l)  dragon=$(ls img/jefes/dragon | wc -l)  golem=$(ls img/jefes/golem | wc -l)"
+          for k in main.py buildozer.spec img/icono.png img/presplash.png music/fondo.mp3 music/boss.mp3 p4a-recipes/pygame-ce/__init__.py; do
+            if [ ! -e "$k" ]; then echo "FALTA $k"; exit 1; fi
+          done
+
+      - name: Dependencias del sistema y buildozer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends git zip unzip wget autoconf automake libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev libltdl-dev ccache
+          python -m pip install --upgrade "pip==24.0" "setuptools<70" wheel
+          python -m pip install "cython==0.29.36" "buildozer==1.6.0"
+          buildozer --version
+
+      - name: SDK de Android (cmdline-tools + licencias)
+        run: |
+          SDK="$HOME/.buildozer/android/platform/android-sdk"
+          mkdir -p "$SDK/cmdline-tools" "$SDK/tools/bin" "$SDK/licenses" "$HOME/.android"
+          touch "$HOME/.android/repositories.cfg"
+          if [ ! -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
+            rm -rf /tmp/clt && mkdir -p /tmp/clt
+            unzip -q /tmp/cmdline-tools.zip -d /tmp/clt
+            rm -rf "$SDK/cmdline-tools/latest" && mkdir -p "$SDK/cmdline-tools/latest"
+            cp -r /tmp/clt/cmdline-tools/* "$SDK/cmdline-tools/latest/"
+            chmod +x "$SDK"/cmdline-tools/latest/bin/* || true
+          fi
+          ln -sf "$SDK/cmdline-tools/latest/bin/sdkmanager" "$SDK/tools/bin/sdkmanager"
+          printf '8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n24333f8a63b6825ea9c5514f83c2829b004d1fee\n' > "$SDK/licenses/android-sdk-license"
+          printf '84831b9409646a918e30573bab4c9c91346d8abd\n' > "$SDK/licenses/android-sdk-preview-license"
+          printf '601085b94cd77f0b54ff86406957099ebe79c4d6\n' > "$SDK/licenses/android-googletv-license"
+          printf '33b6a2b64607f11b759f320ef9dff4ae5c47d97a\n' > "$SDK/licenses/google-gdk-license"
+          printf 'd56f5187479451eabf01fb78af6dfcb131a6481e\n24333f8a63b6825ea9c5514f83c2829b004d1fee\n' > "$SDK/licenses/android-sdk-arm-dbt-license"
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" --licenses > /dev/null 2>&1 || true
+
+      - name: python-for-android
+        run: |
+          P4A="$HOME/.buildozer/android/platform/python-for-android"
+          mkdir -p "$HOME/.buildozer/android/platform"
+          [ -d "$P4A/.git" ] || git clone -b master --single-branch https://github.com/kivy/python-for-android.git "$P4A"
+          sed -i "s/pip install -U pip/pip install pip==24.0/" "$P4A/pythonforandroid/build.py" || true
+          grep -n "pip install pip==24.0" "$P4A/pythonforandroid/build.py" || true
+
+      - name: Compilar APK
+        run: |
+          export ANDROIDSDK="$HOME/.buildozer/android/platform/android-sdk"
+          export ANDROIDNDK="$HOME/.buildozer/android/platform/android-ndk-r28c"
+          export ANDROIDAPI=34
+          export ANDROIDMINAPI=24
+          buildozer -v android debug 2>&1 | tee buildozer-build.log
 
       - name: Upload APK
         if: always()
