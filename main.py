@@ -209,7 +209,7 @@ SCORE_FILE = os.path.join(DATA_DIR, 'top_scores.txt')
 def default_save():
     return {'monedas': 0, 'mejor_puntuacion': 0, 'niveles_desbloqueados': 1,
             'dino': 'clasico', 'arma': 'fuego', 'mejoras': {'vida': 0, 'salto': 0, 'velocidad': 0, 'escudo': 0},
-            'armas': ['fuego'], 'dinos': ['clasico']}
+            'armas': ['fuego'], 'dinos': ['clasico'], 'controles': {}}
 def load_save():
     try:
         with open(SAVE_FILE, 'r', encoding='utf-8') as f: d = json.load(f)
@@ -402,6 +402,7 @@ repeticion = {}
 
 def botones_activos():
     if estado == 'nombre': return BTN_NOMBRE
+    if estado == 'controles': return BTN_CONF
     return BTN_JUEGO if estado in ('play', 'boss', 'puerta') else BTN_MENU
 
 def puntos_tactiles():
@@ -439,27 +440,191 @@ def procesar_toques():
     antes_pulsado = ahora
 
 CACHE_BTN = {}
+def _dibujar_boton(n, r):
+    # Boton semitransparente para que los pulgares no tapen el juego.
+    # La cache se guarda por (nombre, ancho, alto): si cambia el tamano se rehace sola.
+    clave = (n, r.w, r.h)
+    if clave not in CACHE_BTN:
+        if len(CACHE_BTN) > 90: CACHE_BTN.clear()
+        alfa = max(18, int(OPACIDAD * 2.3))          # relleno
+        alb = max(14, int(OPACIDAD * 1.75))          # borde
+        s = pygame.Surface((r.w, r.h), pygame.SRCALPHA)
+        if r.w == r.h:
+            pygame.draw.circle(s, (12, 20, 34, alfa), (r.w // 2, r.h // 2), r.w // 2)
+            pygame.draw.circle(s, (255, 255, 255, alb), (r.w // 2, r.h // 2), r.w // 2, 2)
+        else:
+            pygame.draw.rect(s, (12, 20, 34, alfa), (0, 0, r.w, r.h), border_radius=10)
+            pygame.draw.rect(s, (255, 255, 255, alb), (0, 0, r.w, r.h), 2, border_radius=10)
+        col = (255, 220, 80) if n in ('salto', 'enter', 'JUGAR') else (255, 140, 90) if n in ('disparo', 'BORRAR') else (225, 235, 250)
+        etiqueta = ICONOS.get(n, n)
+        f = FUENTE if len(etiqueta) > 2 else FUENTE_G
+        et = f.render(etiqueta, True, col); et.set_alpha(max(120, int(OPACIDAD * 5.4)))
+        s.blit(et, (r.w // 2 - et.get_width() // 2, r.h // 2 - et.get_height() // 2))
+        CACHE_BTN[clave] = s
+    VENTANA.blit(CACHE_BTN[clave], r.topleft)
+
 def dibujar_botones():
-    # Botones semitransparentes para que los pulgares no tapen el juego.
     for n, r in botones_activos().items():
-        if n not in CACHE_BTN:
-            s = pygame.Surface((r.w, r.h), pygame.SRCALPHA)
-            if r.w == r.h:
-                pygame.draw.circle(s, (12, 20, 34, 92), (r.w // 2, r.h // 2), r.w // 2)
-                pygame.draw.circle(s, (255, 255, 255, 70), (r.w // 2, r.h // 2), r.w // 2, 2)
-            else:
-                pygame.draw.rect(s, (12, 20, 34, 92), (0, 0, r.w, r.h), border_radius=10)
-                pygame.draw.rect(s, (255, 255, 255, 70), (0, 0, r.w, r.h), 2, border_radius=10)
-            col = (255, 220, 80) if n in ('salto', 'enter', 'JUGAR') else (255, 140, 90) if n in ('disparo', 'BORRAR') else (225, 235, 250)
-            etiqueta = ICONOS.get(n, n)
-            f = FUENTE if len(etiqueta) > 2 else FUENTE_G
-            et = f.render(etiqueta, True, col); et.set_alpha(215)
-            s.blit(et, (r.w // 2 - et.get_width() // 2, r.h // 2 - et.get_height() // 2))
-            CACHE_BTN[n] = s
-        VENTANA.blit(CACHE_BTN[n], r.topleft)
+        _dibujar_boton(n, r)
         if tocado(n):
             pygame.draw.circle(VENTANA, (255, 255, 255), r.center, r.w // 2 - 2, 2) if r.w == r.h else \
                 pygame.draw.rect(VENTANA, (255, 255, 255), r, 2, border_radius=10)
+
+# ---------- CONTROLES PERSONALIZABLES (mover, tamano y transparencia) ----------
+# Copia original de los botones: sirve para REINICIAR y para limitar el tamano.
+BTN_JUEGO_BASE = {k: pygame.Rect(r) for k, r in BTN_JUEGO.items()}
+BTN_MENU_BASE = {k: pygame.Rect(r) for k, r in BTN_MENU.items()}
+CONF_BARRA = 34                       # alto de la barra inferior del editor
+CONF_MIN, CONF_MAX = 0.55, 2.4        # tamano minimo/maximo respecto al original
+OPACIDAD = 40                         # transparencia de los botones (10-100)
+CONF_GRUPO = 'juego'                  # grupo que se esta editando
+CONF_SEL = 'izq'                      # boton elegido
+CONF_ARR = {}                         # dedo -> ('ui', nombre) o ('btn', nombre, dx, dy)
+FUENTE_P = mk_font(14)
+BTN_CONF = {
+    'tab_juego': pygame.Rect(6, 368, 76, 30),
+    'tab_menu':  pygame.Rect(86, 368, 76, 30),
+    'tam_menos': pygame.Rect(198, 368, 28, 30),
+    'tam_mas':   pygame.Rect(230, 368, 28, 30),
+    'op_menos':  pygame.Rect(296, 368, 28, 30),
+    'op_mas':    pygame.Rect(328, 368, 28, 30),
+    'reiniciar': pygame.Rect(364, 368, 90, 30),
+    'listo':     pygame.Rect(460, 368, 76, 30)}
+BTN_CONF_TXT = {'tab_juego': 'JUEGO', 'tab_menu': 'MENU', 'tam_menos': '-', 'tam_mas': '+',
+                'op_menos': '-', 'op_mas': '+', 'reiniciar': 'REINICIAR', 'listo': 'LISTO'}
+
+def _grupo_rects(grupo=None):
+    return BTN_JUEGO if (grupo or CONF_GRUPO) == 'juego' else BTN_MENU
+
+def _grupo_base(grupo=None):
+    return BTN_JUEGO_BASE if (grupo or CONF_GRUPO) == 'juego' else BTN_MENU_BASE
+
+def _limitar(r):
+    # Que ningun boton se salga de la pantalla ni tape la barra del editor.
+    r.x = max(0, min(ANCHO - r.w, r.x))
+    r.y = max(0, min(ALTO - r.h - CONF_BARRA, r.y))
+
+def aplicar_controles():
+    # Coloca los botones segun lo guardado. Lo que falte se queda por defecto.
+    global OPACIDAD
+    datos = progreso.get('controles') or {}
+    for grupo, rects, base in (('juego', BTN_JUEGO, BTN_JUEGO_BASE), ('menu', BTN_MENU, BTN_MENU_BASE)):
+        guardado = datos.get(grupo) or {}
+        for nombre, r in rects.items():
+            v = guardado.get(nombre)
+            if isinstance(v, (list, tuple)) and len(v) == 4:
+                try:
+                    r.update(int(v[0]), int(v[1]), max(12, int(v[2])), max(12, int(v[3])))
+                except Exception:
+                    r.update(base[nombre])
+            else:
+                r.update(base[nombre])
+            _limitar(r)
+    try: OPACIDAD = max(10, min(100, int(datos.get('opacidad', 40))))
+    except Exception: OPACIDAD = 40
+    CACHE_BTN.clear()
+
+def guardar_controles():
+    progreso['controles'] = {
+        'juego': {k: [r.x, r.y, r.w, r.h] for k, r in BTN_JUEGO.items()},
+        'menu':  {k: [r.x, r.y, r.w, r.h] for k, r in BTN_MENU.items()},
+        'opacidad': OPACIDAD}
+    save_progress()
+
+def cambiar_tam(nombre, factor):
+    r = _grupo_rects().get(nombre); b = _grupo_base().get(nombre)
+    if not r or not b: return
+    nw = max(int(b.w * CONF_MIN), min(int(b.w * CONF_MAX), int(round(r.w * factor))))
+    nh = max(int(b.h * CONF_MIN), min(int(b.h * CONF_MAX), int(round(r.h * factor))))
+    centro = r.center
+    r.w, r.h = nw, nh; r.center = centro
+    _limitar(r); guardar_controles()
+
+def cambiar_opacidad(delta):
+    global OPACIDAD
+    OPACIDAD = max(10, min(100, OPACIDAD + delta))
+    CACHE_BTN.clear(); guardar_controles()
+
+def reiniciar_grupo():
+    global CONF_SEL
+    rects = _grupo_rects(); base = _grupo_base()
+    for n, r in rects.items(): r.update(base[n])
+    CONF_SEL = list(rects)[0]
+    guardar_controles()
+
+def conf_accion(nombre):
+    global CONF_GRUPO, CONF_SEL, estado, menu_sel
+    if nombre == 'tab_juego':
+        CONF_GRUPO = 'juego'; CONF_SEL = list(BTN_JUEGO)[0]; CACHE_BTN.clear()
+    elif nombre == 'tab_menu':
+        CONF_GRUPO = 'menu'; CONF_SEL = list(BTN_MENU)[0]; CACHE_BTN.clear()
+    elif nombre == 'tam_menos': cambiar_tam(CONF_SEL, 0.88)
+    elif nombre == 'tam_mas':   cambiar_tam(CONF_SEL, 1.14)
+    elif nombre == 'op_menos':  cambiar_opacidad(-8)
+    elif nombre == 'op_mas':    cambiar_opacidad(8)
+    elif nombre == 'reiniciar': reiniciar_grupo()
+    elif nombre == 'listo':
+        guardar_controles(); estado = 'menu'; menu_sel = 5
+
+def procesar_controles():
+    # Editor: arrastrar un boton lo mueve; tocar la barra de abajo la usa.
+    global CONF_SEL
+    pulsos = {}
+    for fid, pos in dedos.items(): pulsos['f%d' % fid] = pos
+    if pygame.mouse.get_pressed()[0]: pulsos['m'] = pygame.mouse.get_pos()
+    for k in list(CONF_ARR):
+        if k not in pulsos: CONF_ARR.pop(k, None)
+    for k, pos in pulsos.items():
+        if k in CONF_ARR: continue
+        for nombre, r in BTN_CONF.items():
+            if r.collidepoint(pos):
+                CONF_ARR[k] = ('ui', nombre); conf_accion(nombre); break
+        else:
+            for nombre, r in _grupo_rects().items():
+                if r.collidepoint(pos):
+                    CONF_SEL = nombre
+                    CONF_ARR[k] = ('btn', nombre, pos[0] - r.x, pos[1] - r.y)
+                    break
+    for k, info in CONF_ARR.items():
+        if info[0] != 'btn' or k not in pulsos: continue
+        r = _grupo_rects().get(info[1])
+        if not r: continue
+        pos = pulsos[k]
+        r.x = int(pos[0] - info[2]); r.y = int(pos[1] - info[3]); _limitar(r)
+
+def _texto_izq(txt, x, y, font, color):
+    VENTANA.blit(font.render(txt, True, color), (x, y))
+
+def draw_controles():
+    fondo_menu((6, 10, 22), (18, 10, 30))
+    pygame.draw.line(VENTANA, (58, 68, 88), (0, ALTO - CONF_BARRA - 2), (ANCHO, ALTO - CONF_BARRA - 2), 1)
+    text('PERSONALIZAR CONTROLES', 10, FUENTE_G, (255, 222, 60))
+    text('Arrastra un boton para moverlo - toca un boton y cambia su tamano con TAM - / +', 40, FUENTE_P, (168, 180, 200))
+    # Botones que se estan editando.
+    for n, r in _grupo_rects().items():
+        _dibujar_boton(n, r)
+        elegido = (n == CONF_SEL)
+        col = (255, 210, 60) if elegido else (110, 130, 165)
+        grosor = 3 if elegido else 1
+        if r.w == r.h: pygame.draw.circle(VENTANA, col, r.center, r.w // 2 - 1, grosor)
+        else: pygame.draw.rect(VENTANA, col, r, grosor, border_radius=10)
+    # Barra inferior.
+    panel(pygame.Rect(0, ALTO - CONF_BARRA, ANCHO, CONF_BARRA), 200, (6, 10, 20), 0)
+    for n, r in BTN_CONF.items():
+        act = (n == 'tab_juego' and CONF_GRUPO == 'juego') or (n == 'tab_menu' and CONF_GRUPO == 'menu')
+        pygame.draw.rect(VENTANA, (52, 108, 178) if act else (28, 38, 58), r, border_radius=6)
+        pygame.draw.rect(VENTANA, (160, 200, 245) if act else (92, 108, 132), r, 1, border_radius=6)
+        t = FUENTE_P.render(BTN_CONF_TXT[n], True, (255, 255, 255) if act else (205, 214, 228))
+        VENTANA.blit(t, (r.centerx - t.get_width() // 2, r.centery - t.get_height() // 2))
+    _texto_izq('TAM', 172, ALTO - CONF_BARRA + 8, FUENTE_P, (188, 198, 214))
+    _texto_izq('VER', 268, ALTO - CONF_BARRA + 8, FUENTE_P, (188, 198, 214))
+    b = _grupo_base().get(CONF_SEL); r = _grupo_rects().get(CONF_SEL)
+    if b and r:
+        pct = int(round(100.0 * r.w / max(1, b.w)))
+        _texto_izq('%s  %d%%   VER %d%%' % (ICONOS.get(CONF_SEL, CONF_SEL), pct, OPACIDAD),
+                   548, ALTO - CONF_BARRA + 8, FUENTE_P, (255, 216, 60))
+
+aplicar_controles()
 
 # ---------- HELPERS ----------
 def text(txt, ty, font=FUENTE, color=(255, 255, 255), center=True, sombra=True):
@@ -994,7 +1159,7 @@ def draw_menu():
     brillo(400, 55, 150, (255, 210, 60), 40)
     text('DINO RUNNER 2.0', 30, FUENTE_XG, (255, 222, 60))
     text('ULTIMATE EVOLUTION', 80, FUENTE_G, (90, 225, 255))
-    for i, it in enumerate(['JUGAR', 'SELECCIONAR DINO', 'SELECCIONAR ARMA', 'TIENDA', 'CLASIFICACION', 'GUARDAR / SALIR']):
+    for i, it in enumerate(['JUGAR', 'SELECCIONAR DINO', 'SELECCIONAR ARMA', 'TIENDA', 'CLASIFICACION', 'CONTROLES', 'GUARDAR / SALIR']):
         item_menu(it, 126 + i * 30, i == menu_sel)
     panel(pygame.Rect(240, 356, 320, 30), 120)
     text(f'MONEDAS {progreso["monedas"]}   MEJOR {progreso["mejor_puntuacion"]}', 362, FUENTE, (255, 216, 60))
@@ -1338,7 +1503,7 @@ def update_boss():
 # ---------- ACCIONES (teclado y táctil comparten la misma lógica) ----------
 def accion(a):
     global menu_sel, estado, dino_sel, arma_sel, agachado, vy, saltos, nombre_jugador
-    global nivel, base_nivel, velocidad, obstaculos, puerta_timer, puerta_nivel
+    global nivel, base_nivel, velocidad, obstaculos, puerta_timer, puerta_nivel, CONF_SEL, CONF_GRUPO
     if estado == 'nombre':
         if a == 'BORRAR': nombre_jugador = nombre_jugador[:-1]
         elif a == 'esc': estado = 'menu'
@@ -1353,15 +1518,26 @@ def accion(a):
             estado = 'puerta'; puerta_timer = 100; puerta_nivel = nivel + 1
             nivel += 1; base_nivel = puntos; velocidad = level_speed(); obstaculos = spawn_group(850)
         return
+    if estado == 'controles':
+        if a in ('esc', 'enter', 'salto'): guardar_controles(); estado = 'menu'; menu_sel = 5
+        elif a in ('arriba', 'abajo'):
+            claves = list(_grupo_rects())
+            i = claves.index(CONF_SEL) if CONF_SEL in claves else 0
+            CONF_SEL = claves[(i + (1 if a == 'abajo' else -1)) % len(claves)]
+        elif a == 'izq': cambiar_tam(CONF_SEL, 0.88)
+        elif a == 'der': cambiar_tam(CONF_SEL, 1.14)
+        return
     if estado == 'menu':
-        if a == 'arriba': menu_sel = (menu_sel - 1) % 6
-        elif a == 'abajo': menu_sel = (menu_sel + 1) % 6
+        if a == 'arriba': menu_sel = (menu_sel - 1) % 7
+        elif a == 'abajo': menu_sel = (menu_sel + 1) % 7
         elif a in ('enter', 'salto'):
             if menu_sel == 0: estado = 'nombre'
             elif menu_sel == 1: estado = 'dino'
             elif menu_sel == 2: estado = 'weapon'
             elif menu_sel == 3: menu_sel = 0; estado = 'shop'
             elif menu_sel == 4: estado = 'scores'
+            elif menu_sel == 5:
+                CONF_GRUPO = 'juego'; CONF_SEL = list(BTN_JUEGO)[0]; estado = 'controles'
             else: save_progress(); pygame.quit(); raise SystemExit
     elif estado in ('dino', 'weapon'):
         items = list(DINOS) if estado == 'dino' else list(ARMAS)
@@ -1436,7 +1612,8 @@ while True:
             elif ev.type == pygame.FINGERDOWN: dedos[ev.finger_id] = (ev.x * ANCHO, ev.y * ALTO)
             elif ev.type == pygame.FINGERMOTION: dedos[ev.finger_id] = (ev.x * ANCHO, ev.y * ALTO)
             elif ev.type == pygame.FINGERUP: dedos.pop(ev.finger_id, None)
-        procesar_toques()
+        if estado == 'controles': procesar_controles()
+        else: procesar_toques()
         if estado in ('play', 'boss', 'puerta'): update_play()
         cambiar_musica(musica_de_estado(estado))
         if mensaje_timer > 0: mensaje_timer -= 1
@@ -1447,10 +1624,11 @@ while True:
         elif estado == 'weapon': draw_select('ARMAS', list(ARMAS), arma_sel, progreso['armas'], {k: v['precio'] for k, v in ARMAS.items()})
         elif estado == 'shop': draw_shop()
         elif estado == 'scores': draw_scores()
+        elif estado == 'controles': draw_controles()
         elif estado == 'gameover': draw_over()
         elif estado == 'victory': draw_end()
         else: draw_game()
-        dibujar_botones()
+        if estado != 'controles': dibujar_botones()
         pygame.display.flip(); RELOJ.tick(FPS)
     except Exception as _e:
         try:
